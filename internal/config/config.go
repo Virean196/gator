@@ -31,7 +31,7 @@ func write(cfg Config) error {
 	if err != nil {
 		return fmt.Errorf("error marshalling data")
 	}
-	os.WriteFile(configFilePath, marshalledData, 0666)
+	os.WriteFile(configFilePath, marshalledData, 0600)
 	return nil
 }
 
