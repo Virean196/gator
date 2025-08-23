@@ -16,6 +16,7 @@ type state struct {
 }
 
 func main() {
+
 	var s state
 	s.cfg, _ = config.Read()
 	db, err := sql.Open("postgres", s.cfg.DbURL)
@@ -31,8 +32,11 @@ func main() {
 	commands.register("reset", handleReset)
 	commands.register("users", handlerListUsers)
 	commands.register("agg", handlerAgg)
-	commands.register("addfeed", handlerAddFeed)
+	commands.register("addfeed", middlewareLoggedIn(handlerAddFeed))
 	commands.register("feeds", handlerFeeds)
+	commands.register("follow", middlewareLoggedIn(handlerFollow))
+	commands.register("following", middlewareLoggedIn(handlerFollowing))
+	commands.register("unfollow", middlewareLoggedIn(handlerUnfollow))
 	args := os.Args
 	if len(args) < 2 {
 		fmt.Print("not enough args ")
