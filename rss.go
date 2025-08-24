@@ -7,6 +7,7 @@ import (
 	"html"
 	"io"
 	"net/http"
+	"time"
 )
 
 type RSSFeed struct {
@@ -15,7 +16,7 @@ type RSSFeed struct {
 		Link          string    `xml:"link"`
 		Description   string    `xml:"description"`
 		Language      string    `xml:"language"`
-		LastBuildDate string    `xml:"lastBuildDate"`
+		LastBuildDate time.Time `xml:"lastBuildDate"`
 		Item          []RSSItem `xml:"item"`
 	} `xml:"channel"`
 }
@@ -46,7 +47,7 @@ func fetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
 	var rssfeed RSSFeed
 	err = xml.Unmarshal(body, &rssfeed)
 	if err != nil {
-		return &RSSFeed{}, fmt.Errorf("error unmarshalling the body")
+		return &RSSFeed{}, fmt.Errorf("error unmarshalling the body: %w", err)
 	}
 	return &rssfeed, nil
 }
